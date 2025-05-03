@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from serial_com import SerialCtrl
 
 c1 = "#FFFFFF"
@@ -79,15 +80,28 @@ class ComGui:
 
     def serial_connect(self):
         if self.butn_connect["text"] == "Connect":
-            #start conncection
-            print("Fuck")
-            self.butn_connect.config(text="Conted")
-            pass
+            self.serial.SerialOpen(self)
+            if self.serial.ser.status:
+                self.butn_connect["text"]="Disconnect"
+                self.butn_refresh["state"]="disabled"
+                self.drop_baud["state"]="disabled"
+                self.drop_com["state"]="disabled"
+                infomessage=f"Successful UART connection using {self.clicked_com.get()}"
+                messagebox.showinfo("Connection Established",infomessage)
+            else:
+                errormessage=f"Failure to establish UART connection using {self.clicked_com.get()}"
+                messagebox.showerror("Error Connecting",errormessage)
         else:
-            #stop connection
-            print("OFF")
-            pass
+            self.serial.SerialClose()
 
+            self.butn_connect["text"]="Connect"
+            self.butn_refresh["state"]="active"
+            self.drop_baud["state"]="active"
+            self.drop_com["state"]="active"               
+            print("Disconnected")
+            self.butn_connect.config(text="Connect")
+            infomessage=f"UART conncection using {self.clicked_com.get()} is now closed"
+            messagebox.showinfo("Connection Closed",infomessage)
 
     def connect_cntrl(self,other):
         print("Connect")
