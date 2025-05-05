@@ -14,7 +14,7 @@ class RootGUI:
 
         self.root = tk.Tk()
         self.root.title("Serial Connection")
-        self.root.geometry('720x460')
+        self.root.geometry('360x230')
         self.root.config(bg=c1)
         self.root.iconbitmap("serial.ico")
 
@@ -88,6 +88,7 @@ class ComGui:
                 self.drop_com["state"]="disabled"
                 infomessage=f"Successful UART connection using {self.clicked_com.get()}"
                 messagebox.showinfo("Connection Established",infomessage)
+                self.conn=ConnGUI(self.root,self.serial)
             else:
                 errormessage=f"Failure to establish UART connection using {self.clicked_com.get()}"
                 messagebox.showerror("Error Connecting",errormessage)
@@ -110,6 +111,28 @@ class ComGui:
         else:
             self.butn_connect.config(state="active")
 
+class ConnGUI():
+    def __init__(self,root,serial):
+        self.root=root
+        self.serial=serial
+        self.frame=tk.LabelFrame(root,text="Connection Manager",padx=5,pady=5,bg="white",width=60)
+        self.sync_label=tk.Label(self.frame,text="Sync Status",bg='white',width=15,anchor='w')
+        self.sync_status=tk.Label(self.frame,text="...sync...",bg='white',fg='orange',width=5)
+
+        self.ConnGUIOpen()
+
+    def ConnGUIOpen(self):
+        self.root.geometry('800x120')
+        self.frame.grid(row=0,column=4,rowspan=3,columnspan=5,padx=5,pady=5)
+        self.sync_label.grid(row=1,column=1)
+        self.sync_status.grid(row=1,column=2)
+
+
+
+
+
+
 if __name__ == "__main__":
     RootGUI()
     ComGui()
+    ConnGUI()
